@@ -48,4 +48,4 @@ while true; do
     $PSQL "UPDATE users SET games_played=$GAMES_PLAYED, best_game=$BEST_GAME WHERE username='$USERNAME';"
     break
   fi
-done
+done# commit 1: add database connection
