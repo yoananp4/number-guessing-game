@@ -9,7 +9,7 @@ USER_DATA=$($PSQL "SELECT games_played, best_game FROM users WHERE username='$US
 
 if [[ -z $USER_DATA ]]
 then
-  echo "Welcome, $USERNAME! It looks like is your first time here."
+  echo "Welcome, $USERNAME! It looks like this your first time here."
 
   INSERT_RESULT=$($PSQL "INSERT INTO users(username) VALUES('$USERNAME');")
   GAMES_PLAYED=0
@@ -43,7 +43,7 @@ while true; do
    echo "You guessed it in $NUM_GUESSES tries. The secret number was $SECRET_NUMBER. Nice job!"
 
    GAMES_PLAYED=$((GAMES_PLAYED + 1))
-   if [[ -z $BEST_GAME || $NUM_GUESSES -lt $BEST_GAME ]]; then
+   if [[ $BEST_GAME -eq 0 || $NUM_GUESSES -lt $BEST_GAME ]]; then
       BEST_GAME=$NUM_GUESSES
     fi
     $PSQL "UPDATE users SET games_played=$GAMES_PLAYED, best_game=$BEST_GAME WHERE username='$USERNAME';"
