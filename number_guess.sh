@@ -6,43 +6,52 @@ echo "Enter your username:"
 read USERNAME
 
 USER_DATA=$($PSQL "SELECT games_played, best_game FROM users WHERE username='$USERNAME';")
+GAMES_PLAYED=$($PSQL "SELECT COUNT(*) FROM user INNER JOIN games USING(user_id) WHERE username = '$USERNAME'")
+BEST_GAME=$($PSQL "SELECT MIN(number_guesses) FROM useres INNER JOIN games USING(user_id) WHERE username = '$USERNAME'")
 
-if [[ -z $USER_DATA ]]; then
-  echo "Welcome, $USERNAME! It looks like this is your first time here."
-  $PSQL "INSERT INTO users(username) VALUES('$USERNAME');"
-  GAMES_PLAYED=0
-  BEST_GAME=0
+if [[ $USER_DATA ]]; 
+  then
+    INSERT_USER=$($PSQL "INSERT INTO users(username) VALUES('$USERNAME')")
+    echo "Welcome, $USERNAME! It looks like this is your first time here."
 else
-  GAMES_PLAYED=$(echo $USER_DATA | cut -d'|' -f1 | xargs)
-  BEST_GAME=$(echo $USER_DATA | cut -d'|' -f2 | xargs)
-  BEST_GAME=${BEST_GAME:-0}
   echo "Welcome back, $USERNAME! You have played $GAMES_PLAYED games, and your best game took $BEST_GAME guesses."
 fi
 
-SECRET_NUMBER=$(( RANDOM % 1000 + 1 ))
-NUM_GUESSES=0
+RANDOM_NUM=$((1 + RANDOM % 1000))
+GUESS=1
 
 echo "Guess the secret number between 1 and 1000:"
 
-while true; do
-  read GUESS
+while read NUM 
+do
+  if [[ ! $NUM =~ ^[0-9]+$ ]] 
+    then
+      echo "That is not an integer, guess again:"
+    else
+    if [[ $NUM -eq $RANDOM_NUM ]]
+      then
+      break;
+      else
+        if [[ $NUM -gt $RANDOM_NUM ]]
+        then
+          echo -n "It's lower than that, guess again:"
+        elif [[ $NUM -lt $RANDOM_NUM ]]
+        then
+          echo -n "It's higher than that, guess again:"
+        fi
+      fi
+    fi
+    GUESS=$(( $GUESS + 1 ))
+done
 
-  if ! [[ $GUESS =~ ^[0-9]+$ ]]; then
-    echo "That is not an integer, guess again:"
-    continue
-  fi
-
-  ((NUM_GUESSES++))
-
-  if (( GUESS < SECRET_NUMBER )); then
-    echo "It's higher than that, guess again:"
-  elif (( GUESS > SECRET_NUMBER )); then
-    echo "It's lower than that, guess again:"
+if [[ $GUESS == 1 ]]
+  then 
+    echo "You guessed it in $GUESS tries. The secret number was $RANDOM_NUM. Nice job!"
   else
-   echo "You guessed it in $NUM_GUESSES tries. The secret number was $SECRET_NUMBER. Nice job!"
+    echo "You guessed it in $GUESS tries. The secret number was $RANDOM_NUM. Nice job!"
+fi
 
-   GAMES_PLAYED=$((GAMES_PLAYED + 1))
-   if [[ $BEST_GAME -eq 0 || $NUM_GUESSES -lt $BEST_GAME ]]; then
+if [[ $BEST_GAME -eq 0 || $NUM_GUESSES -lt $BEST_GAME ]]; then
       BEST_GAME=$NUM_GUESSES
     fi
     $PSQL "UPDATE users SET games_played=$GAMES_PLAYED, best_game=$BEST_GAME WHERE username='$USERNAME';"
