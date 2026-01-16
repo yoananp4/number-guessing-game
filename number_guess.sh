@@ -13,8 +13,8 @@ if [[ -z $USER_DATA ]]; then
   GAMES_PLAYED=0
   BEST_GAME=0
 else
-  GAMES_PLAYED=$(echo $USER_DATA | cut -d'|' -f1)
-  BEST_GAME=$(echo $USER_DATA | cut -d'|' -f2)
+  GAMES_PLAYED=$(echo $USER_DATA | cut -d'|' -f1 | xargs)
+  BEST_GAME=$(echo $USER_DATA | cut -d'|' -f2 | xargs)
   BEST_GAME=${BEST_GAME:-0}
   echo "Welcome back, $USERNAME! You have played $GAMES_PLAYED games, and your best game took $BEST_GAME guesses."
 fi
