@@ -26,7 +26,7 @@ while read GUESS
 do
   if [[ ! $GUESS =~ ^[0-9]+$ ]]
   then
-    echo "That is not an integer, guess again:"
+    echo -n "That is not an integer, guess again:"
     continue
   fi
 
@@ -37,12 +37,11 @@ do
     break
   elif [[ $GUESS -gt $SECRET ]]
   then
-    echo "It's lower than that, guess again:"
+    echo -n "It's lower than that, guess again:"
   else
-    echo "It's higher than that, guess again:"
+    echo -n "It's higher than that, guess again:"
   fi
 done
 
 echo "You guessed it in $TRIES tries. The secret number was $SECRET. Nice job!"
-
-$PSQL "INSERT INTO games(user_id, number_guesses) VALUES($USER_ID, $TRIES)" > /dev/null
+$PSQL "INSERT INTO games(number_guesses, user_id) VALUES($TRIES, $USER_ID)" > /dev/null
