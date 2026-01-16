@@ -17,8 +17,8 @@ else
   echo "Welcome back, $USERNAME! You have played $GAMES_PLAYED games, and your best game took $BEST_GAME guesses."
 fi
 
-NUM_GUESSES=$(echo $NUM_GUESSES | tr -d '\r\n')
-SECRET_NUMBER=$(echo $SECRET_NUMBER | tr -d '\r\n')
+SECRET_NUMBER=$(( RANDOM % 1000 + 1 ))
+NUM_GUESSES=0
 
 echo "Guess the secret number between 1 and 1000:"
 
