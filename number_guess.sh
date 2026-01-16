@@ -18,7 +18,7 @@ else
   GAMES_PLAYED=$(echo $USER_DATA | cut -d'|' -f1)
   BEST_GAME=$(echo $USER_DATA | cut -d'|' -f2)
   echo "Welcome back, $USERNAME! You have played $GAMES_PLAYED games, and your best game took $BEST_GAME guesses."
-fi
+f1
 
 SECRET_NUMBER=$(( RANDOM % 1000 + 1 ))
 NUM_GUESSES=0
