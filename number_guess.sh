@@ -14,7 +14,7 @@ then
   GAMES_PLAYED=0
   BEST_GAME=0
 else
-  read GAMES_PLAYES BEST_GAME <<< $(echo $SUPER_DATA | tr -d ' ')
+  read GAMES_PLAYED BEST_GAME <<< $($PSQL "SELECT games_played, best_game FROM users WHERE username='$USERNAME';" | tr -d '\n')
   echo "Welcome back, $USERNAME! You have played $GAMES_PLAYED games, and your best game took $BEST_GAME guesses."
 fi
 
