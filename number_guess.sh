@@ -6,18 +6,15 @@ echo "Enter your username:"
 read USERNAME
 
 USER_DATA=$($PSQL "SELECT games_played, best_game FROM users WHERE username='$USERNAME';")
-USER_DATA=$(echo $USER_DATA | tr -d '[:space:]')
 
 if [[ -z $USER_DATA ]]
 then
   echo "Welcome, $USERNAME! It looks like this is your first time here."
-
-  INSERT_RESULT=$($PSQL "INSERT INTO users(username) VALUES('$USERNAME');")
+  $PSQL "INSERT INTO users(username) VALUES('$USERNAME');"
   GAMES_PLAYED=0
   BEST_GAME=0
 else
-  GAMES_PLAYED=$(echo $USER_DATA | cut -d'|' -f1)
-  BEST_GAME=$(echo $USER_DATA | cut -d'|' -f2)
+  read GAMES_PLAYES BEST_GAME <<< $(echo $SUPER_DATA | tr -d ' ')
   echo "Welcome back, $USERNAME! You have played $GAMES_PLAYED games, and your best game took $BEST_GAME guesses."
 fi
 
