@@ -7,14 +7,13 @@ read USERNAME
 
 USER_DATA=$($PSQL "SELECT games_played, best_game FROM users WHERE username='$USERNAME';")
 
-if [[ -z $USER_DATA ]]
-then
+if [[ -z $USER_DATA ]]; then
   echo "Welcome, $USERNAME! It looks like this is your first time here."
   $PSQL "INSERT INTO users(username) VALUES('$USERNAME');"
   GAMES_PLAYED=0
   BEST_GAME=0
 else
-  read GAMES_PLAYED BEST_GAME <<< $($PSQL "SELECT games_played, best_game FROM users WHERE username='$USERNAME';" | tr -d '\n')
+  read GAMES_PLAYED BEST_GAME <<< $(echo $USER_DDATA | tr -d '\r\n')
   echo "Welcome back, $USERNAME! You have played $GAMES_PLAYED games, and your best game took $BEST_GAME guesses."
 fi
 
