@@ -5,7 +5,7 @@ PSQL="psql --username=freecodecamp --dbname=number_guess -t --no-align -c"
 echo "Enter your username:"
 read USERNAME
 
-USER_DATA=$($PSQL "SELECT games_played, best_game FROM users WHERE username='$USERNAME';")
+USER_DATA=$($PSQL "SELECT games_played, best_game FROM users WHERE username='$USERNAME';" | xargs)
 
 if [[ -z $USER_DATA ]]
 then
