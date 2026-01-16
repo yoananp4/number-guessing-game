@@ -35,9 +35,9 @@ while true; do
   fi
 
   if (( GUESS < SECRET_NUMBER )); then
-    echo "It's higher that that, guess again:"
+    echo "It's higher than that, guess again:"
   elif (( GUESS > SECRET_NUMBER )); then
-    echo "It's lower that that, guess again:"
+    echo "It's lower than that, guess again:"
   else
    echo "You guessed it in $NUM_GUESSES tries. The secret number was $SECRET_NUMBER. Nice job!"
 
@@ -48,4 +48,6 @@ while true; do
     $PSQL "UPDATE users SET games_played=$GAMES_PLAYED, best_game=$BEST_GAME WHERE username='$USERNAME';"
     break
   fi
-done# commit 1: add database connection
+done
+
+# commit 1: add database connection
